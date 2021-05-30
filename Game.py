@@ -21,7 +21,9 @@ class Ball():
         if self.direction['horizontal'] == 1: self.pos['x'] += 1
         else: self.pos['x'] -= 1
         return 0
-
+    
+    def restart_pos(self):
+        self.pos = {'x':round(self.board_cols/2),'y':round(self.board_rows/2)}
 
 class Game():
     def __init__(self,p1,p2):
@@ -41,25 +43,27 @@ class Game():
         self.p1 = p1
         self.p2 = p2
         
-
     def turn(self):
-        action = self.p1.action(self.ball.pos)
+        #Turno Jogador 1 (Esquerda)
+        action = self.p1.action(self.ball)
         if action.lower() == 'w' and self.p1.pos>=2:  self.p1.pos -= 1
         if action.lower() == 's' and self.p1.pos<=len(self.board)-3:self.p1.pos += 1
         if action.lower() == ' ': pass
-        ball_resposta = self.ball.move(self.p1.pos,self.p2.pos)
-        if ball_resposta != 0:
-            self.gaming = False
 
-        action = self.p2.action(self.ball.pos)
+        #Turno Jogador 2 (Direita)
+        action = self.p2.action(self.ball)
         if action.lower() == 'w' and self.p2.pos>=2:  self.p2.pos -= 1
         if action.lower() == 's' and self.p2.pos<=len(self.board)-3:self.p2.pos += 1
         if action.lower() == ' ': pass
         ball_resposta = self.ball.move(self.p1.pos,self.p2.pos)
-        if ball_resposta != 0:
-            self.gaming = False
 
-    
+        #Turnos Bolinha (Aumentar a quantide de turnos aumenta a velocidade da bolinha)
+        for _ in range(2):
+            if ball_resposta != 0:
+                if ball_resposta == -1: self.p1.points += 1
+                elif ball_resposta == 1: self.p2.points += 1
+                self.ball.restart_pos()
+
     def show_board(self):
         for _ in range(10): print()
         for b in range(len(self.board)):
