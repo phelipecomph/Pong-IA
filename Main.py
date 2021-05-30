@@ -1,9 +1,10 @@
 from Game import Game
-from PlayerHuman import Player
+from PlayerHuman import Player as HPlayer
+from PlayerMonteCarlo import Player as MPlayer
 
 if __name__ == '__main__':
-    playerLeft = Player()
-    playerRight = Player()
+    playerLeft = MPlayer(0)
+    playerRight = MPlayer(1)
     game = Game(playerLeft,playerRight)
     game.show_board()
     
